@@ -1,4 +1,4 @@
-FROM ghcr.io/immich-app/immich-server:release
+FROM ghcr.io/immich-app/immich-server:v1.135.3
 
 # Install dependencies for Start9 integration
 RUN apt-get update && apt-get install -y \
