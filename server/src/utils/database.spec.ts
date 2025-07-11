@@ -1,4 +1,4 @@
-import { asPostgresConnectionConfig } from 'src/utils/database';
+import { asPostgresConnectionConfig, getKyselyConfig } from 'src/utils/database';
 
 describe('database  utils', () => {
   describe('asPostgresConnectionConfig', () => {
@@ -78,6 +78,36 @@ describe('database  utils', () => {
         host: '/path/to/socket',
         database: 'database2',
       });
+    });
+  });
+
+  describe('getKyselyConfig', () => {
+    it('should use default max pool size when not specified in options', () => {
+      const config = getKyselyConfig({
+        connectionType: 'parts',
+        host: 'localhost',
+        port: 5432,
+        username: 'test',
+        password: 'test',
+        database: 'test',
+      });
+      
+      expect(config).toBeDefined();
+      expect(config.dialect).toBeDefined();
+    });
+
+    it('should accept custom options including max pool size', () => {
+      const config = getKyselyConfig({
+        connectionType: 'parts',
+        host: 'localhost',
+        port: 5432,
+        username: 'test',
+        password: 'test',
+        database: 'test',
+      }, { max: 25 });
+      
+      expect(config).toBeDefined();
+      expect(config.dialect).toBeDefined();
     });
   });
 });

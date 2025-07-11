@@ -158,6 +158,11 @@ export class EnvDto {
   @Optional()
   DB_VECTOR_EXTENSION?: 'pgvector' | 'pgvecto.rs' | 'vectorchord';
 
+  @IsInt()
+  @Optional()
+  @Type(() => Number)
+  DB_CONNECTION_POOL_SIZE?: number;
+
   @IsString()
   @Optional()
   NO_COLOR?: string;

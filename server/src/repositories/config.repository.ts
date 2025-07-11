@@ -59,6 +59,7 @@ export interface EnvData {
     config: DatabaseConnectionParams;
     skipMigrations: boolean;
     vectorExtension?: VectorExtension;
+    connectionPoolSize: number;
   };
 
   licensePublicKey: {
@@ -268,6 +269,7 @@ const getEnv = (): EnvData => {
       config: databaseConnection,
       skipMigrations: dto.DB_SKIP_MIGRATIONS ?? false,
       vectorExtension,
+      connectionPoolSize: dto.DB_CONNECTION_POOL_SIZE ?? 10,
     },
 
     licensePublicKey: isProd ? productionKeys : stagingKeys,
