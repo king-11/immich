@@ -1,0 +1,140 @@
+id: immich
+title: Immich
+version: 1.117.0
+release-notes: |
+  Initial Start9 packaging for Immich - High performance self-hosted photo and video management solution.
+  
+  Features:
+  - Upload and view photos and videos from mobile app
+  - Auto backup photos and videos from mobile app  
+  - Multi-user support
+  - Album and Shared albums
+  - Scrubbable/seekable video player
+  - Support for Live Photos
+  - User-defined storage structure
+  - Public sharing
+  - Archive and Favorites
+  - Global and per-user search
+  - Administrative functions (user management)
+  - Background backup when the app is open
+  - Virtual scroll
+  - OAuth support
+  - API Keys
+  - Reverse Geocoding
+  - Multi-language support
+  - Dark mode
+
+license: AGPL-3.0
+wrapper-repo: https://github.com/king-11/immich
+upstream-repo: https://github.com/immich-app/immich
+support-site: https://immich.app/docs
+marketing-site: https://immich.app/
+donation-url: https://github.com/sponsors/immich-app
+
+description:
+  short: High performance self-hosted photo and video management solution
+  long: |
+    Immich is a high performance self-hosted photo and video management solution. 
+    
+    With Immich, you can:
+    - Upload and organize your photos and videos
+    - Auto-backup from your mobile device
+    - Share albums with family and friends
+    - Search through your media using AI-powered features
+    - Access your media from anywhere
+    - Maintain full control over your data
+    
+    This is a complete replacement for Google Photos with privacy and control in mind.
+
+assets:
+  license: LICENSE
+  icon: assets/icon.png
+  instructions: assets/instructions.md
+
+main:
+  type: docker
+  image: main
+  entrypoint: start.sh
+  args: []
+  mounts:
+    main: /data
+    certs: /certs
+
+health-checks:
+  web-ui:
+    name: Web Interface
+    success-message: Immich is ready to use
+    type: docker
+    image: main
+    entrypoint: healthcheck.sh
+    args: []
+    io-format: json
+    inject: true
+
+config: ~
+
+properties:
+  type: object
+  spec:
+    url:
+      type: string
+      name: Immich URL
+      description: The URL to access Immich
+      masked: false
+      copyable: true
+    username:
+      type: string  
+      name: Admin Username
+      description: Default admin username
+      masked: false
+      copyable: true
+
+dependencies: {}
+
+backup:
+  create:
+    type: docker
+    image: compat
+    system: true
+    entrypoint: backup.sh
+    args:
+      - create
+    mounts:
+      BACKUP: /mnt/backup
+      main: /data
+  restore:
+    type: docker  
+    image: compat
+    system: true
+    entrypoint: backup.sh
+    args:
+      - restore
+    mounts:
+      BACKUP: /mnt/backup
+      main: /data
+
+migrations:
+  from:
+    "*":
+      type: script
+      args: ["from"]
+  to:
+    "*":
+      type: script
+      args: ["to"]
+
+interfaces:
+  main:
+    name: Immich Web Interface
+    description: Main Immich web interface for managing photos and videos
+    tor-config:
+      port-mapping:
+        80: 2283
+    lan-config:
+      443:
+        ssl: true
+        internal: 2283
+    ui: true
+    protocols:
+      - tcp
+      - http
