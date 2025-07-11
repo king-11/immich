@@ -12,12 +12,12 @@ RUN apt-get update && apt-get install -y \
 RUN mkdir -p /data/library /data/postgres /data/config
 
 # Copy Start9 specific scripts
-COPY start.sh /usr/local/bin/start.sh
+COPY docker_entrypoint.sh /usr/local/bin/docker_entrypoint.sh
 COPY healthcheck.sh /usr/local/bin/healthcheck.sh
 COPY backup.sh /usr/local/bin/backup.sh
 
 # Make scripts executable
-RUN chmod +x /usr/local/bin/start.sh /usr/local/bin/healthcheck.sh /usr/local/bin/backup.sh
+RUN chmod +x /usr/local/bin/docker_entrypoint.sh /usr/local/bin/healthcheck.sh /usr/local/bin/backup.sh
 
 # Set environment variables for Start9
 ENV UPLOAD_LOCATION=/data/library
@@ -26,4 +26,4 @@ ENV IMMICH_CONFIG_FILE=/data/config/immich.json
 
 EXPOSE 2283
 
-CMD ["/usr/local/bin/start.sh"]
+CMD ["/usr/local/bin/docker_entrypoint.sh"]
