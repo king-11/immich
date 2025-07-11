@@ -1,0 +1,15 @@
+# Start9 package build artifacts
+*.s9pk
+.build/
+
+# Temporary files
+*.tmp
+*.temp
+
+# IDE files
+.vscode/
+.idea/
+
+# OS generated files
+.DS_Store
+Thumbs.db
