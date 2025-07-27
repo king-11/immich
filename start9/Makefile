@@ -1,6 +1,6 @@
 # Start9 Immich Service Package Makefile
 
-.PHONY: build test clean validate lint
+.PHONY: build test clean validate lint pack verify
 
 IMAGE_NAME := immich-start9
 PACKAGE_NAME := immich
@@ -38,6 +38,21 @@ package: validate test
 	@echo "Note: This requires Start9 SDK to be installed"
 	@echo "Run: start-sdk pack"
 
+# Pack the service (creates .s9pk file)
+pack: build
+	@echo "Packing Start9 service..."
+	start-sdk pack
+
+# Verify the packaged service
+verify:
+	@echo "Verifying Start9 package..."
+	@if [ -f $(PACKAGE_NAME).s9pk ]; then \
+		start-sdk verify s9pk $(PACKAGE_NAME).s9pk; \
+	else \
+		echo "Package file $(PACKAGE_NAME).s9pk not found. Run 'make pack' first."; \
+		exit 1; \
+	fi
+
 # Help
 help:
 	@echo "Available targets:"
@@ -47,4 +62,6 @@ help:
 	@echo "  lint      - Lint shell scripts (requires shellcheck)"
 	@echo "  clean     - Clean up build artifacts"
 	@echo "  package   - Create Start9 package (requires Start9 SDK)"
+	@echo "  pack      - Pack the service into .s9pk file"
+	@echo "  verify    - Verify the packaged service"
 	@echo "  help      - Show this help message"
