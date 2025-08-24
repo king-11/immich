@@ -71,7 +71,7 @@ export const getKyselyConfig = (
             console.warn('Postgres notice:', notice);
           }
         },
-        max: 10,
+        max: options.max ?? 10,
         types: {
           date: {
             to: 1184,

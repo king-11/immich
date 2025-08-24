@@ -26,6 +26,7 @@ const resetEnv = () => {
     'DB_SSL_MODE',
     'DB_SKIP_MIGRATIONS',
     'DB_VECTOR_EXTENSION',
+    'DB_CONNECTION_POOL_SIZE',
 
     'REDIS_HOSTNAME',
     'REDIS_PORT',
@@ -90,6 +91,7 @@ describe('getEnv', () => {
         },
         skipMigrations: false,
         vectorExtension: undefined,
+        connectionPoolSize: 10,
       });
     });
 
@@ -117,6 +119,17 @@ describe('getEnv', () => {
         connectionType: 'url',
         url: 'postgres://postgres1:postgres2@database1:54320/immich',
       });
+    });
+
+    it('should use custom connection pool size', () => {
+      process.env.DB_CONNECTION_POOL_SIZE = '20';
+      const { database } = getEnv();
+      expect(database.connectionPoolSize).toBe(20);
+    });
+
+    it('should default connection pool size when not provided', () => {
+      const { database } = getEnv();
+      expect(database.connectionPoolSize).toBe(10);
     });
   });
 

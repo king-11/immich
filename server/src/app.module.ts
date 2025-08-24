@@ -44,7 +44,7 @@ const imports = [
   BullModule.registerQueue(...bull.queues),
   ClsModule.forRoot(cls.config),
   OpenTelemetryModule.forRoot(otel),
-  KyselyModule.forRoot(getKyselyConfig(database.config)),
+  KyselyModule.forRoot(getKyselyConfig(database.config, { max: database.connectionPoolSize })),
 ];
 
 class BaseModule implements OnModuleInit, OnModuleDestroy {
